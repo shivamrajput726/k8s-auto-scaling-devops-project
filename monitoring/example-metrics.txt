@@ -1,0 +1,32 @@
+# Example Prometheus metrics output from /metrics
+# This file is illustrative and intended for documentation/demo use.
+
+# HELP http_requests_total Total number of requests by method, status and handler.
+# TYPE http_requests_total counter
+http_requests_total{handler="/",method="GET",status="2xx"} 154
+http_requests_total{handler="/health",method="GET",status="2xx"} 41
+http_requests_total{handler="/livez",method="GET",status="2xx"} 23
+http_requests_total{handler="/readyz",method="GET",status="2xx"} 23
+
+# HELP http_request_duration_seconds Duration of HTTP requests in seconds.
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{handler="/",le="0.1",method="GET"} 120
+http_request_duration_seconds_bucket{handler="/",le="0.5",method="GET"} 149
+http_request_duration_seconds_bucket{handler="/",le="1.0",method="GET"} 154
+http_request_duration_seconds_bucket{handler="/",le="+Inf",method="GET"} 154
+http_request_duration_seconds_sum{handler="/",method="GET"} 18.42
+http_request_duration_seconds_count{handler="/",method="GET"} 154
+
+# HELP python_gc_objects_collected_total Objects collected during gc.
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 521
+python_gc_objects_collected_total{generation="1"} 64
+python_gc_objects_collected_total{generation="2"} 8
+
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 8.9344e+07
+
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 12.83

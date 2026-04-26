@@ -1,0 +1,43 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: fastapi-app-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: fastapi-app.health
+      rules:
+        - alert: FastAPIAppDown
+          expr: up{job="fastapi-app"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: FastAPI app metrics endpoint is down
+            description: Prometheus cannot scrape the FastAPI app for more than 2 minutes.
+        - alert: FastAPIHighRestartRate
+          expr: increase(kube_pod_container_status_restarts_total{namespace="scalable-app",container="fastapi-app"}[10m]) > 2
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: FastAPI pod is restarting repeatedly
+            description: The FastAPI container restarted more than two times in the last 10 minutes.
+        - alert: FastAPIReadinessDrop
+          expr: sum(kube_pod_status_ready{namespace="scalable-app",condition="true"}) < 1
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: No FastAPI pods are ready
+            description: All application pods are unready, so the service may be unavailable.
+        - alert: FastAPIHPANearMax
+          expr: kube_horizontalpodautoscaler_status_current_replicas{namespace="scalable-app",horizontalpodautoscaler="fastapi-app"} >= 10
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: FastAPI HPA is near maximum capacity
+            description: The autoscaler is running near max replicas for at least 10 minutes.

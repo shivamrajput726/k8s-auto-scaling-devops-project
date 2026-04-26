@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: scalable-app
+resources:
+  - cluster-issuer.yaml
+  - namespace.yaml
+  - serviceaccount.yaml
+  - secret.yaml
+  - configmap.yaml
+  - service.yaml
+  - deployment.yaml
+  - hpa.yaml
+  - pdb.yaml
+  - networkpolicy.yaml
+  - ingress.yaml
